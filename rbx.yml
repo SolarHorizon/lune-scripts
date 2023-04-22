@@ -1,0 +1,10 @@
+build:
+  default:
+  - default
+run:
+  default: default
+test:
+  port: 25428
+  roots:
+  - ReplicatedStorage
+  - ServerStorage

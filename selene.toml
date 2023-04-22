@@ -1,0 +1,2 @@
+std="luau+lune"
+exclude=["luneTypes.d.luau"]
