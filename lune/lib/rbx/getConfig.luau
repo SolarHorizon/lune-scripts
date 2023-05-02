@@ -1,5 +1,6 @@
 local mergeDeep = require("../util/mergeDeep")
 local locate = require("../util/locateYamlFile")
+local serde = require("@lune/serde") :: typeof(serde)
 
 export type RbxConfig = {
 	build: { default: { string } },
@@ -36,7 +37,8 @@ local function getConfig(): RbxConfig
 	local file = locate("rbx")
 
 	if file then
-		config = mergeDeep(default, fs.readFile(file))
+		local content = fs.readFile(file)
+		config = mergeDeep(default, serde.decode("yaml", content))
 	end
 
 	return config

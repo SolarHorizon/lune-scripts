@@ -3,7 +3,7 @@ local None = require("None")
 --[=[
 	@within util
 ]=]
-local function mergeDeep(...: any): { [any]: any }
+local function mergeDeep(...: { [any]: any }): { [any]: any }
 	local new = {}
 
 	for index = 1, select("#", ...) do
