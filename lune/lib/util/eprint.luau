@@ -1,3 +1,6 @@
+--[=[
+	@within util
+]=]
 local function eprint(...: any)
 	local args = { ... }
 

@@ -1,5 +1,16 @@
 local getFileName = require("../util/getFileName")
 
+--[=[
+	@within rojo
+
+	Strips the file extension from a rojo project name.
+
+	```lua
+	local name = getProjectName("default.project.json")
+
+	print(name) -- "default"
+	```
+]=]
 local function getProjectName(file: string): string?
 	local name = getFileName(file)
 

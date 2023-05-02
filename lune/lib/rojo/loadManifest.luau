@@ -1,6 +1,6 @@
 --# selene: allow(incorrect_standard_library_use)
-local serde = require("@lune/serde") :: any
-local getProjectName = require("../getProjectName")
+local serde = require("@lune/serde") :: typeof(serde)
+local getProjectName = require("getProjectName")
 
 type Properties = { [string]: any }
 
@@ -23,7 +23,10 @@ type RojoManifest = {
 	globIgnorePaths: { string }?,
 }
 
-local function load(file): RojoManifest
+--[=[
+	@within rojo
+]=]
+local function load(file: string): RojoManifest
 	local name = getProjectName(file)
 
 	assert(

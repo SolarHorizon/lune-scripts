@@ -1,6 +1,11 @@
 local net = require("@lune/net") :: typeof(net)
 local roblox = require("proxy")
 
+--[=[
+	@within roblox
+
+	Downloads an asset from the Roblox website
+]=]
 local function downloadAsset(assetId: number, file: string)
 	local cookie = roblox.getAuthCookie()
 	assert(cookie ~= nil, "Failed to get auth cookie")

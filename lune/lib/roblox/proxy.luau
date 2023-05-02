@@ -1,3 +1,10 @@
+--[=[
+	@within roblox
+	@prop proxy roblox
+
+	A proxy for @lune/roblox which provides types until lune requires are fixed
+]=]
+
 type roblox = {
 	getAuthCookie: () -> string?,
 	readModelFile: (filePath: string) -> { Instance },

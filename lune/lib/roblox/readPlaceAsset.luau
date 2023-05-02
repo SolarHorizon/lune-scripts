@@ -4,9 +4,6 @@ local roblox = require("proxy")
 
 --[=[
 	@within roblox
-	@param placeId number
-	@return Datamodel? -- nil when an error occurs
-	@return string? -- error message if an error occured
 
 	Reads a place file from the Roblox website
 ]=]

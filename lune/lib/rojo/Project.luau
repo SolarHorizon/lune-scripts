@@ -1,14 +1,26 @@
 --# selene: allow(incorrect_standard_library_use)
-local GAME_API = "https://api.roblox.com/universes"
-
 local roblox = require("@lune/roblox") :: any
 
 local makeDirAll = require("../util/makeDirAll")
 local getProjectName = require("getProjectName")
 local open = require("../util/open")
-local loadManifest = require("manifest/load")
+local loadManifest = require("loadManifest")
 
+--[=[
+	@within rojo
+	@prop Project Project
+]=]
+
+--[=[
+	@within Project
+	@type ProjectType "place" | "model"
+]=]
 type ProjectType = "place" | "model"
+
+--[=[
+	@within Project
+	@type BuildFormat "binary" | "xml"
+]=]
 type BuildFormat = "binary" | "xml"
 
 type ProjectImpl = {
@@ -17,7 +29,7 @@ type ProjectImpl = {
 	fromName: (filePath: string) -> Project,
 	build: (self: Project, format: BuildFormat?) -> string,
 	deploy: (self: Project) -> (),
-	load: (self: Project) -> Instance,
+	load: (self: Project) -> unknown,
 	open: (self: Project) -> (),
 }
 
@@ -32,10 +44,45 @@ export type Project = typeof(setmetatable(
 	{} :: ProjectImpl
 ))
 
+--[=[
+	@within Project
+	@prop path string
+]=]
+
+--[=[
+	@within Project
+	@prop name string
+]=]
+
+--[=[
+	@within Project
+	@prop type ProjectType
+]=]
+
+--[=[
+	@within Project
+	@prop gameId number?
+]=]
+
+--[=[
+	@within Project
+	@prop placeId number?
+]=]
+
+--[=[
+	@class Project
+
+	```lua
+	local Project = require("lib/rojo/Project")
+	```
+]=]
 local Project = {} :: ProjectImpl
 Project.__index = Project
 
-function Project.fromFile(file)
+--[=[
+	@within Project
+]=]
+function Project.fromFile(file: string): Project
 	local manifest = loadManifest(file)
 	local className = manifest.tree["$className"]
 
@@ -57,11 +104,17 @@ function Project.fromFile(file)
 	return setmetatable(self, Project)
 end
 
-function Project.fromName(name)
+--[=[
+	@within Project
+]=]
+function Project.fromName(name: string): Project
 	return Project.fromFile(`{process.cwd}/{name}.project.json`)
 end
 
-function Project:build(format)
+--[=[
+	@within Project
+]=]
+function Project:build(format: BuildFormat?): string
 	local extension = if self.type == "model" then "rbxm" else "rbxl"
 
 	if format == "xml" then
@@ -91,6 +144,9 @@ function Project:build(format)
 	return output
 end
 
+--[=[
+	@within Project
+]=]
 function Project:open()
 	assert(
 		self.type == "place",
@@ -99,14 +155,34 @@ function Project:open()
 	open(self:build())
 end
 
-function Project:load(): DataModel | Instance
+--[=[
+	@within Project
+	@method load
+]=]
+function Project:load(): unknown
 	local file = self:build()
 
-	return if self.type == "place"
-		then roblox.readPlaceFile(file) :: DataModel
-		else roblox.readModelFile(file) :: Instance
+	if self.type == "place" then
+		return roblox.readPlaceFile(file)
+	end
+
+	local instance = roblox.readModelFile(file)
+
+	assert(
+		#instance < 2,
+		`Model file for project {self.name} has more than one root instance.`
+	)
+	assert(
+		#instance > 0,
+		`Model file for project {self.name} has more than one root instance.`
+	)
+
+	return instance[1]
 end
 
+--[=[
+	@within Project
+]=]
 function Project:deploy()
 	assert(
 		self.type == "place",
@@ -124,7 +200,7 @@ function Project:deploy()
 	local file = self:build()
 
 	local response = net.request({
-		url = `{GAME_API}/v1/{self.gameId}/places/{self.placeId}/versions`,
+		url = `https://api.roblox.com/universes/v1/{self.gameId}/places/{self.placeId}/versions`,
 		headers = {
 			["x-api-key"] = process.env.DEPLOY_KEY,
 			["Content-Type"] = "application/octet-stream",

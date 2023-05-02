@@ -1,6 +1,9 @@
 --# selene: allow(incorrect_standard_library_use)
 local serde = require("@lune/serde") :: any
 
+--[=[
+	@within matter
+]=]
 local function createComponent(name: string, ...: string)
 	print("create:", name)
 

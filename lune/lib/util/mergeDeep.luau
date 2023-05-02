@@ -1,6 +1,9 @@
 local None = require("None")
 
-local function mergeDeep(...: any)
+--[=[
+	@within util
+]=]
+local function mergeDeep(...: any): { [any]: any }
 	local new = {}
 
 	for index = 1, select("#", ...) do
@@ -21,6 +24,8 @@ local function mergeDeep(...: any)
 			end
 		end
 	end
+
+	return new
 end
 
 return mergeDeep

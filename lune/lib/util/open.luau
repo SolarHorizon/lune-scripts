@@ -4,7 +4,10 @@ local openers = {
 	windows = { cmd = "pwsh", "-c", "Start-Process" },
 }
 
-local function open(file: string)
+--[=[
+	@within util
+]=]
+local function open(file: string): ProcessSpawnResult
 	local opener = openers[process.os]
 
 	if process.env.OPENER then

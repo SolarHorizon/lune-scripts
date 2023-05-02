@@ -1,3 +1,6 @@
+--[=[
+	@within util
+]=]
 local function makeDirAll(path: string)
 	print(`Creating new directory: {path}`)
 

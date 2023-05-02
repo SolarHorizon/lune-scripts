@@ -24,6 +24,12 @@ local default = {
 	-- },
 }
 
+--[=[
+	@within rbx
+
+	Gets the rbx config from the `rbx.yml` file found in the current directory.
+	If one does not exist, it will return a default config.
+]=]
 local function getConfig(): RbxConfig
 	local config = table.clone(default)
 

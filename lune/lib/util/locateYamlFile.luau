@@ -1,3 +1,6 @@
+--[=[
+	@within util
+]=]
 local function locateYamlFile(name: string): string?
 	local extensions = { "yaml", "yml" }
 
