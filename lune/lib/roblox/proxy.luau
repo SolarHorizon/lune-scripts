@@ -11,6 +11,7 @@ type roblox = {
 	readPlaceFile: (filePath: string) -> DataModel,
 	writeModelFile: (filePath: string, instances: { Instance }) -> (),
 	writePlaceFile: (filePath: string, dataModel: DataModel) -> (),
+	Instance: typeof(Instance),
 }
 
 return require("@lune/roblox") :: roblox

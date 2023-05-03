@@ -8,6 +8,7 @@ local roblox = require("proxy")
 ]=]
 local function downloadAsset(assetId: number, file: string)
 	local cookie = roblox.getAuthCookie()
+
 	assert(cookie ~= nil, "Failed to get auth cookie")
 
 	local response = net.request({

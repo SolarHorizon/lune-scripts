@@ -7,12 +7,20 @@ local roblox = require("proxy")
 
 	Reads a place file from the Roblox website
 ]=]
-local function readPlaceAsset(placeId: number, file: string): DataModel
+local function readPlaceAsset(placeId: number, path: string?): DataModel
+	local file = "temp.rbxl"
+
+	if path then
+		file = path
+	end
+
 	downloadAsset(placeId, file)
 
 	local dataModel = roblox.readPlaceFile(file)
 
-	fs.removeFile(file)
+	if path == nil then
+		fs.removeFile(file)
+	end
 
 	return dataModel
 end
