@@ -14,9 +14,13 @@ local function readPlaceAsset(placeId: number, path: string?): DataModel
 		file = path
 	end
 
-	downloadAsset(placeId, file)
+	local ok = false
+	local dataModel: DataModel
 
-	local dataModel = roblox.readPlaceFile(file)
+	repeat
+		downloadAsset(placeId, file)
+		ok, dataModel = pcall(roblox.readPlaceFile, file)
+	until ok
 
 	if path == nil then
 		fs.removeFile(file)

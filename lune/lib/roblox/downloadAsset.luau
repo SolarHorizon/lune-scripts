@@ -9,6 +9,20 @@ local roblox = require("proxy")
 local function downloadAsset(assetId: number, file: string)
 	local cookie = roblox.getAuthCookie()
 
+	if cookie == nil then
+		if
+			not stdio.prompt(
+				"confirm",
+				"Could not locate auth cookie in environment. Would you like to continue?"
+			)
+		then
+			process.exit()
+		end
+
+		cookie =
+			stdio.prompt("text", "Please input your auth cookie to continue.")
+	end
+
 	assert(cookie ~= nil, "Failed to get auth cookie")
 
 	local response = net.request({
