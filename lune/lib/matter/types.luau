@@ -1,3 +1,35 @@
+local Matter = require(script.Parent._Index["%s"]["matter"])
+
+type ConnectionObject =
+	{ Disconnect: () -> () }
+	| { Destroy: () -> () }
+	| { disconnect: () -> () }
+	| { destroy: () -> () }
+	| () -> ()
+
+type CustomEvent =
+	{ Connect: <T...>(T...) -> ConnectionObject }
+	| { connect: <T...>(T...) -> ConnectionObject }
+	| { on: <T...>(T...) -> ConnectionObject }
+
+type Overrides = {
+	component: <T>(name: string, defaultData: (T & {})?) -> Component<T>,
+	log: (...any) -> (),
+	useEvent: <T...>(
+		instance: Instance | { [string]: CustomEvent } | CustomEvent,
+		event: string | RBXScriptSignal<T...> | CustomEvent
+	) -> () -> (number, T...),
+	useHookState: <T>(
+		discriminator: any?,
+		cleanupCallback: (storage: T & {}) -> boolean
+	) -> T & {},
+	useThrottle: (seconds: number, discriminator: any?) -> boolean,
+	Debugger: typeof(Matter.Debugger),
+	None: typeof(Matter.None),
+	Loop: typeof(Matter.Loop),
+	World: World,
+}
+
 export type Component<T> = (initialData: T?) -> ComponentInstance<T>
 
 -- TODO: Add below metatable to this when it works better
@@ -138,3 +170,5 @@ export type World = typeof(setmetatable(
 		},
 	}
 ))
+
+return (Matter :: any) :: Overrides

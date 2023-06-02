@@ -1,23 +1,27 @@
 local loadManifest = require("../wally/loadManifest")
 
-local function createTypes(manifestPath: string?, packagesPath: string?)
-	local types = fs.readFile(".lune/lib/matter/types.luau")
+local PACKAGES_PATH = "./Packages"
 
-	local manifest = loadManifest(manifestPath)
+local function createTypes(typesPath: string?)
+	local typesFile = typesPath or ".lune/lib/matter/types.luau"
+	assert(
+		fs.isFile(typesFile),
+		`Could not find the Matter types file! \n\tPath: {typesFile}`
+	)
+
+	local types = fs.readFile(typesFile)
+
+	local manifest = loadManifest()
 
 	local package = manifest.dependencies.Matter
 	assert(package, "wally.toml does not include Matter as a dependency")
 
-	local packages = packagesPath or "./Packages"
-	assert(fs.isDir(packages), `{packagesPath} is not a directory`)
+	assert(fs.isDir(PACKAGES_PATH), `{PACKAGES_PATH} is not a directory`)
 
 	local moduleName =
 		string.lower(`{package.author}_{package.name}@{package.version}`)
 
-	local requireLine =
-		`return require(script.Parent._Index["{moduleName}"]["matter"])`
-
-	fs.writeFile(`{packages}/Matter.lua`, `{types}\n{requireLine}`)
+	fs.writeFile(`{PACKAGES_PATH}/Matter.lua`, string.format(types, moduleName))
 end
 
 return createTypes
